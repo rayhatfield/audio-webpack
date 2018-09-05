@@ -1,24 +1,33 @@
+import StartEvent from './StartEvent';
+import StopEvent from './StopEvent';
+
 const noop = () => null;
 
 self.onmessage = ({data}) => {
-	(handlers[data] || noop)();
+	const event = (handlers[data] || noop)();
+	if (event) {
+		postMessage(event);
+	}
 };
 
 let interval;
 
 const handlers = {
 	start: () => {
-		console.log('worker - start');
 		interval = setInterval(handlers.tick, 100);
+		return new StartEvent();
 	},
+
 	stop: () => {
-		console.log('worker - stop');
 		clearInterval(interval);
 		interval = null;
+		return new StopEvent();
 	},
+
 	tick: () => {
 		console.log('worker - tick');
 	},
+
 	close: () => {
 		self.close();
 	}

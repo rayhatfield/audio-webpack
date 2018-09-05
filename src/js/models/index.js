@@ -1,1 +1,1 @@
-export Sequencer from './Sequencer';
+export Worker from './sequencer.worker';
